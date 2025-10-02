@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Child1Component } from './components/child1/child1.component';
 import { CommonModule, NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
@@ -128,9 +134,44 @@ import { Child2Component } from './components/child2/child2.component';
     <ng-template #template> Parent component template component </ng-template>
 
     <app-child2 [child2Template]="template"> </app-child2>
+
+    <br /><br />
+
+    <!-- ViewChild 
+    !!Burada static parametresini true verdiğimizde ngOnInit içinde de erişebiliriz. 
+    -->
+    <input type="text" value="Hello ViewChild" #txtInput />
+    <br /><br />
+
+    <button #button>First Button</button>
+    <button #button2>Second Button</button>
+    <button #button>Third Button</button>
+
+    <br /><br />
+
+    <div #div>Div1</div>
+    <div #div>Div2</div>
+    <div #div>Div3</div>
   `,
 })
 export class AppComponent {
+  @ViewChild('txtInput', { static: true }) txtInput: ElementRef;
+
+  @ViewChild('button', { static: true }) buttonElement: ElementRef;
+  @ViewChild('button2', { static: true }) button2Element: ElementRef;
+
+  @ViewChildren('div') _div: QueryList<ElementRef>;
+
+  ngOnInit() {
+    this.button2Element.nativeElement.style.backgroundColor = 'green';
+  }
+
+  ngAfterViewInit() {
+    console.log(this.txtInput.nativeElement.value);
+    this.buttonElement.nativeElement.style.backgroundColor = 'red';
+    console.log(this._div);
+  }
+
   age: number = 25;
   value: boolean = false;
 
